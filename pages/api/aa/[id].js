@@ -4,6 +4,7 @@ import axios from 'axios'
 import { address, startingId, maxSupply, abi, encoded } from '../../../utils/aa'
 
 const infuraId = process.env.NEXT_PUBLIC_INFURA_ID
+const ipfsURI = process.env.NEXT_PUBLIC_IPFS_URI
 const seed = process.env.TRIBAL_TRIBUTE_SEED
 
 const handler = async (req, res) => {
@@ -27,7 +28,7 @@ const handler = async (req, res) => {
     }
     const bytes = await CryptoJS.AES.decrypt(encoded[0], seed)
     const cid = await bytes.toString(CryptoJS.enc.Utf8)
-    const uri = `https://ipfs.io/ipfs/${cid}`
+    const uri = `${ipfsURI}${cid}`
 
     const result = await axios.get(uri)
     const data = result.data

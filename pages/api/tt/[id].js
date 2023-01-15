@@ -5,6 +5,7 @@ import { address, startingId, maxSupply, abi, encoded } from '../../../utils/tt'
 
 const encodedCID = (id) => encoded[id - 1]
 const infuraId = process.env.NEXT_PUBLIC_INFURA_ID
+const ipfsURI = process.env.NEXT_PUBLIC_IPFS_URI
 const seed = process.env.TRIBAL_TRIBUTE_SEED
 
 const handler = async (req, res) => {
@@ -29,7 +30,7 @@ const handler = async (req, res) => {
     const encrypted = await encodedCID(tokenId)
     const bytes = await CryptoJS.AES.decrypt(encrypted, seed)
     const cid = await bytes.toString(CryptoJS.enc.Utf8)
-    const uri = `https://ipfs.io/ipfs/${cid}`
+    const uri = `${ipfsURI}${cid}`
 
     const result = await axios.get(uri)
     const data = result.data
