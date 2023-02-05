@@ -1,4 +1,4 @@
-const address = ''
+const address = '0x48d4CD62A44F7f72322dad056C4Cb357C7E8cA37'
 const startingId = 1
 const maxSupply = 1000
 const abi = [
