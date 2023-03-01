@@ -5,11 +5,13 @@ import {
   address,
   startingId,
   maxSupply,
+  maxRevealedId,
   abi,
-  encoded
+  encoded,
+  revealedCid
 } from '../../../utils/serp'
 
-const encodedCID = (id) => encoded[id - 1]
+const encodedCID = (id) => encoded[id - maxRevealedId - 1]
 const infuraId = process.env.NEXT_PUBLIC_INFURA_ID
 const ipfsURI = process.env.NEXT_PUBLIC_IPFS_URI
 const seed = process.env.SERP_SEED
@@ -17,6 +19,7 @@ const seed = process.env.SERP_SEED
 const handler = async (req, res) => {
   const { id } = req.query
   const tokenId = parseInt(id)
+
   if (
     !tokenId ||
     tokenId < startingId ||
@@ -24,6 +27,15 @@ const handler = async (req, res) => {
     address === ''
   ) {
     return res.status(400).json({ message: 'Invalid Token ID' })
+  } else if (tokenId <= maxRevealedId) {
+    try {
+      const tokenUri = `${ipfsURI}${revealedCid}/${tokenId}.json`
+      const result = await axios.get(tokenUri)
+      const data = result.data
+      return res.status(200).json(data)
+    } catch (err) {
+      return res.status(400).json(err)
+    }
   }
 
   try {
